@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 enum class TicketType(@get:JsonValue val typeName : String) {
     INCIDENT("incident"),
     PROBLEM("problem"),
+    TASK("task"),
     QUESTION("question");
 }
 
