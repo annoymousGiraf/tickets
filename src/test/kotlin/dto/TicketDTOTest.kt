@@ -21,7 +21,7 @@ class TicketDTOTest {
     fun `Should parse ticket structure`() {
         //Given
         val ticketJson : String = ticketWithAssignee
-        val givenDate = ZonedDateTime.parse("2011-04-28T11:19:34-10:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME).withZoneSameInstant(
+        val givenDate = ZonedDateTime.parse("2016-04-28T11:19:34-10:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME).withZoneSameInstant(
             ZoneId.of("UTC"))
 
         //When
