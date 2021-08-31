@@ -19,9 +19,24 @@ val ticketWithAssignee : String = """
 
 val ticketWithoutAssignee : String = """
     {
+    "assignee_id": 24,
     "_id": "c68cb7d7-b517-4d0b-a826-9605423e78c2",
     "created_at": "2016-03-09T01:39:48-11:00",
     "type": "task",
+    "subject": "A Problem in Western Sahara",
+    "tags": [
+      "Massachusetts",
+      "New York",
+      "Minnesota",
+      "New Jersey"
+    ]
+  }
+""".trimIndent()
+
+val ticketWithoutType: String = """
+    {
+    "_id": "c68cb7d7-b517-4d0b-a826-9605423e78c2",
+    "created_at": "2016-03-09T01:39:48-11:00",
     "subject": "A Problem in Western Sahara",
     "tags": [
       "Massachusetts",

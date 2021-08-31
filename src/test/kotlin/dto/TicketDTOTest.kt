@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import dto.test.data.ticketWithAssignee
 import dto.test.data.ticketWithoutAssignee
+import dto.test.data.ticketWithoutType
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertIterableEquals
 
@@ -89,6 +90,16 @@ class TicketDTOTest {
         val ticket : TicketDTO = objectMapper.readValue(ticketJson)
         //then
         assertNull(ticket.assignee_id)
+    }
+
+    @Test
+    fun `ticket should be deserialized without type`(){
+        //Given
+        val ticketJson : String = ticketWithoutType
+        //When
+        val ticket : TicketDTO = objectMapper.readValue(ticketJson)
+        //then
+        assertNull(ticket.type)
     }
 
 
