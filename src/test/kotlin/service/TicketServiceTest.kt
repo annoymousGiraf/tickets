@@ -17,7 +17,7 @@ class TicketServiceTest {
 
     init {
         val urlToJson = {}.javaClass.classLoader.getResource("tickets.json")
-        jsonTicketDataStore = DataStoreFactory.createDataStore(urlToJson, TICKETS)
+        jsonTicketDataStore = DataStoreFactory.createDataStore(urlToJson, TICKETS) as DataStore
     }
 
     @Test

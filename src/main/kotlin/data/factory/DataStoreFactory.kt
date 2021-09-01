@@ -4,8 +4,10 @@ import data.factory.DataStoreFactory.DataEntity.*
 import data.factory.DataStoreFactory.DataStoreType.*
 import data.store.DataStore
 import data.store.JsonTicketDataStore
+import data.store.JsonUserDataStore
 import extnetion.dataStoreType
 import reader.TicketJsonFileReader
+import reader.UserJsonFileReader
 import java.lang.IllegalArgumentException
 import java.net.URL
 
@@ -26,20 +28,21 @@ class DataStoreFactory {
 
 
     companion object {
-        fun  createDataStore(url : URL, entityType : DataEntity) : DataStore = when(url.dataStoreType()) {
+        fun  createDataStore(url : URL, entityType : DataEntity) : Any = when(url.dataStoreType()) {
             JSON_DATA_STORE.storeType -> {
-
-
                 when(entityType) {
                     TICKETS -> {
                         val jsonFileReader  = TicketJsonFileReader(url)
-                        JsonTicketDataStore(jsonFileReader.loadTickets())
+                        JsonTicketDataStore(jsonFileReader.ticketsDTO)
                     }
-                    else -> throw IllegalArgumentException("unsupported entity store")
+                    USERS -> {
+                        val jsonFileReader  = UserJsonFileReader(url)
+                        JsonUserDataStore(jsonFileReader.usersDTO)
+                    }
                 }
 
             }
-            else -> throw IllegalArgumentException("unsupported data store")
+            else -> Error("unsupported data store")
         }
     }
 

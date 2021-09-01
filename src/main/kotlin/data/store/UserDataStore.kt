@@ -1,5 +1,7 @@
 package data.store
 
-interface UserDataStore {
+import dto.UserDTO
 
+interface UserDataStore : DataStore {
+    fun findUserById(id : Int) : UserDTO
 }

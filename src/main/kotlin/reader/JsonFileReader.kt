@@ -24,16 +24,11 @@ open class JsonFileReader(url : URL) : FileReader {
 }
 
 class TicketJsonFileReader(url: URL) : JsonFileReader(url) {
+    val ticketsDTO : List<TicketDTO> =  objectMapper.readValue(jsonString)
 
-    fun loadTickets() : List<TicketDTO> {
-        return objectMapper.readValue(jsonString)
-    }
 }
 
 
 class UserJsonFileReader(url: URL) : JsonFileReader(url) {
-
-    fun loadUsers() : List<UserDTO> {
-        return objectMapper.readValue(jsonString)
-    }
+    val usersDTO : List<UserDTO> = objectMapper.readValue(jsonString)
 }
