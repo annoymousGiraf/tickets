@@ -1,13 +1,10 @@
 package dto.test.data.extnetion
 
-import data.factory.DataStoreFactory
 import data.factory.DataStoreFactory.DataStoreType.*
-import data.store.JsonFileDataStore
 import extnetion.dataStoreType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.net.URI
-import java.net.URL
 import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

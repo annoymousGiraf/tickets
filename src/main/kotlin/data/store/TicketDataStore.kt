@@ -2,6 +2,6 @@ package data.store
 
 import dto.TicketDTO
 
-interface TicketDataStore {
+interface TicketDataStore : DataStore {
     fun lookupByAssignee(id : Int) : List<TicketDTO>
 }
