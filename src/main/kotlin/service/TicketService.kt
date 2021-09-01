@@ -9,4 +9,9 @@ class TicketService(private val ticketDataStore : TicketDataStore) {
         return ticketDataStore.lookupByAssignee(givenAssigneeId)
     }
 
+    fun getAllAssignedTickets() : List<TicketDTO> {
+        return ticketDataStore.findAllAssignedTickets()
+    }
+
+
 }

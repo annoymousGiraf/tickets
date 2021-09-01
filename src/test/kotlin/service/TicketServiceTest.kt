@@ -1,11 +1,17 @@
 package dto.test.data.service
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import data.factory.DataStoreFactory
 import data.factory.DataStoreFactory.*
 import data.factory.DataStoreFactory.DataEntity.*
 import data.store.DataStore
 import data.store.TicketDataStore
 import dto.TicketDTO
+import dto.test.data.allTickets
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import service.TicketService
@@ -32,4 +38,20 @@ class TicketServiceTest {
         assertEquals(4,tickets.size)
     }
 
+    @Test
+    fun `user should be able to view all assigned tickets`() {
+        //Given
+        val ticketService : TicketService = TicketService(jsonTicketDataStore as TicketDataStore)
+        val givenAssignedTickets : List<TicketDTO> =  jacksonObjectMapper()
+            .registerModule(JavaTimeModule())
+            .readValue(allTickets)
+
+        //When
+        val tickets : List<TicketDTO> = ticketService.getAllAssignedTickets()
+        //Then
+        assertIterableEquals(getOnlyAssignedTickets(givenAssignedTickets),tickets)
+    }
+
+    private fun getOnlyAssignedTickets(givenAssignedTickets: List<TicketDTO>) =
+        givenAssignedTickets.filter { it.assignee_id != null }
 }

@@ -13,10 +13,11 @@ import kotlin.test.assertEquals
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceTest {
     val jsonUserDataStore : DataStore
-
+    val userService : UserService
     init {
         val urlToJson = {}.javaClass.classLoader.getResource("users.json")
         jsonUserDataStore = DataStoreFactory.createDataStore(urlToJson, USERS) as DataStore
+        userService = UserService(jsonUserDataStore as UserDataStore)
     }
 
     @Test
@@ -24,12 +25,21 @@ class UserServiceTest {
         //Given
         val givenAssigneeId = 24
         val expectedName = "Harris Côpeland"
-        val userService = UserService(jsonUserDataStore as UserDataStore)
         //When
         val user : UserDTO = userService.findUserById(givenAssigneeId)
 
         //Then
         assertEquals(expectedName ,user.name)
+    }
+
+    @Test
+    fun `get all users should retrive all users in the datastore`(){
+        //Given
+        val expectedUsers = 75
+        //When
+        val users = userService.findAllUsers()
+        //Then
+        assertEquals(expectedUsers,users.size)
     }
 
 
