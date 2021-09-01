@@ -13,5 +13,9 @@ class TicketService(private val ticketDataStore : TicketDataStore) {
         return ticketDataStore.findAllAssignedTickets()
     }
 
+    fun getAllTickets() : List<TicketDTO> {
+        return ticketDataStore.findAllTickets()
+    }
+
 
 }

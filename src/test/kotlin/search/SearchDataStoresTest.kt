@@ -5,6 +5,9 @@ import data.factory.DataStoreFactory.DataEntity.*
 
 import data.store.TicketDataStore
 import data.store.UserDataStore
+import dto.TicketType
+import dto.TicketType.*
+import entity.TicketEntity
 import entity.User
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -40,6 +43,28 @@ class SearchDataStoresTest {
         //Then
         assertIterableEquals(expectedTopics, user.ticketTopics)
 
+    }
+
+    @Test
+    fun `user should be able to search tickets by assignee id`(){
+        //Given
+        val givenUserId = 24
+
+        //When
+        val tickets : List<TicketEntity> = searchDataStores.searchTicketByAssigneeId(givenUserId)
+        //Then
+        assertEquals(4,tickets.size)
+    }
+
+    @Test
+    fun `user should be able to search by type`() {
+        //Given
+        val givenType = TASK
+
+        //When
+        val tickets = searchDataStores.searchTicketByType(givenType)
+        //Then
+        assertEquals(58,tickets.size)
     }
 
     private fun createUserDataStore(): UserDataStore {

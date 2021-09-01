@@ -25,6 +25,15 @@ class TicketServiceTest {
         val urlToJson = {}.javaClass.classLoader.getResource("tickets.json")
         jsonTicketDataStore = DataStoreFactory.createDataStore(urlToJson, TICKETS) as DataStore
     }
+    @Test
+    fun `should be able to get all tickets`() {
+        //Given
+        val ticketService : TicketService = TicketService(jsonTicketDataStore as TicketDataStore)
+        //When
+        val tickets = ticketService.getAllTickets()
+        //Then
+        assertEquals(200,tickets.size)
+    }
 
     @Test
     fun `search ticket by assignee should return all his tickets`() {
