@@ -50,6 +50,14 @@ class SearchDataStores(private val userService: UserService, private val ticketS
 
     }
 
+    fun searchTicketBySubject(ticketSubject: String): TicketEntity {
+        val ticket = ticketService.searchTicketBySubject(ticketSubject)
+        if (ticket is TicketDTO) {
+            return TicketEntity(ticket, mapUserIdToUserName[ticket.assignee_id] ?: "")
+        }
+        return EmptyTicket()
+    }
+
     private fun getUserById(givenUserId: Int): User {
         val user = userService.findUserById(givenUserId)
         val ticketsTopics = ticketService.searchByAssignee(givenUserId).map { it.subject }

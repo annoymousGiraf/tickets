@@ -69,7 +69,7 @@ class SearchDataStoresTest {
     }
 
     @Test
-    fun `user should be able to search Ticket by UUID`(){
+    fun `user should be able to search Ticket by UUID`() {
         //Given
         val ticketUUID = UUID.fromString("436bf9b0-1147-4c0a-8439-6f79833bff5b")
 
@@ -77,6 +77,18 @@ class SearchDataStoresTest {
         val ticket = searchDataStores.searchTicketByUUID(ticketUUID)
         //Then
         assertEquals("A Catastrophe in Korea (North)" , ticket.ticketDTO.subject)
+    }
+
+    @Test
+    fun `user should be able to search Ticket by Subject`() {
+       //Given
+        val ticketSubject = "A Catastrophe in Korea (North)"
+
+        //Then
+        val ticket = searchDataStores.searchTicketBySubject(ticketSubject)
+
+        //Them
+        assertEquals(UUID.fromString("436bf9b0-1147-4c0a-8439-6f79833bff5b"),ticket.ticketDTO._id)
     }
 
     private fun createUserDataStore(): UserDataStore {
