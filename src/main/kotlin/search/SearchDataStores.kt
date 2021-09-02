@@ -7,6 +7,7 @@ import entity.TicketEntity
 import entity.User
 import service.TicketService
 import service.UserService
+import java.time.ZonedDateTime
 import java.util.*
 
 
@@ -21,9 +22,10 @@ class SearchDataStores(private val userService: UserService, private val ticketS
                 .findAllUsers()
                 .map{ it._id to it.name }
                 .toMap()
+
         ticketWithUserName = ticketService
             .getAllAssignedTickets()
-            .map { TicketEntity(it,mapUserIdToUserName[it.assignee_id] ?: "") }
+            .map { TicketEntity(it,getUserNameById(it.assignee_id)) }
             .toSet()
     }
 
@@ -37,25 +39,35 @@ class SearchDataStores(private val userService: UserService, private val ticketS
 
     fun searchTicketByType(ticketType: TicketType): List<TicketEntity> {
         return ticketService.searchTicketByType(ticketType)
-            .map { TicketEntity(it,mapUserIdToUserName[it.assignee_id] ?: "") }
+            .map { TicketEntity(it,getUserNameById(it.assignee_id)) }
 
     }
 
     fun searchTicketByUUID(uuid: UUID) : TicketEntity {
         val ticket = ticketService.searchTicketByUuid(uuid)
         if (ticket is TicketDTO) {
-            return TicketEntity(ticket,mapUserIdToUserName[ticket.assignee_id] ?: "")
+            return TicketEntity(ticket,getUserNameById(ticket.assignee_id))
         }
         return EmptyTicket()
-
     }
+
+
 
     fun searchTicketBySubject(ticketSubject: String): TicketEntity {
         val ticket = ticketService.searchTicketBySubject(ticketSubject)
         if (ticket is TicketDTO) {
-            return TicketEntity(ticket, mapUserIdToUserName[ticket.assignee_id] ?: "")
+            return TicketEntity(ticket, getUserNameById(ticket.assignee_id))
         }
         return EmptyTicket()
+    }
+
+    fun searchTicketByDate(ticketDate: ZonedDateTime): List<TicketEntity> {
+        val tickets = ticketService.searchTicketByTime(ticketDate)
+        return tickets.map { TicketEntity(it,getUserNameById(it.assignee_id)) }
+    }
+
+    fun searchTicketByTag(tag: String): List<TicketEntity> {
+        TODO("Not yet implemented")
     }
 
     private fun getUserById(givenUserId: Int): User {
@@ -63,6 +75,7 @@ class SearchDataStores(private val userService: UserService, private val ticketS
         val ticketsTopics = ticketService.searchByAssignee(givenUserId).map { it.subject }
         return User(user,ticketsTopics)
     }
+
 
     private fun prepareCollectionOfUsersAndTickets() : Set<User> {
        return userService
@@ -73,6 +86,9 @@ class SearchDataStores(private val userService: UserService, private val ticketS
     }
 
 
+
+    private fun getUserNameById(assignee_id : Int?) : String = if (assignee_id != null ) mapUserIdToUserName[assignee_id] ?: ""
+            else ""
 
 
 }

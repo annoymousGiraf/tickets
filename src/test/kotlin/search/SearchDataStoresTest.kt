@@ -15,12 +15,13 @@ import org.junit.jupiter.api.TestInstance
 import search.SearchDataStores
 import service.TicketService
 import service.UserService
+import java.time.ZonedDateTime
 import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SearchDataStoresTest {
 
-    val searchDataStores : SearchDataStores
+    private val searchDataStores : SearchDataStores
 
     init {
         val jsonTicketDataStore = createTicketDataStore()
@@ -89,6 +90,25 @@ class SearchDataStoresTest {
 
         //Them
         assertEquals(UUID.fromString("436bf9b0-1147-4c0a-8439-6f79833bff5b"),ticket.ticketDTO._id)
+    }
+
+    @Test
+    fun `user should be able to search ticket by Date`() {
+        //Given
+        val ticketDate = ZonedDateTime.parse("2016-02-11T15:46:29Z[UTC]")
+        //When
+        val tickets = searchDataStores.searchTicketByDate(ticketDate)
+        //Then
+        assertEquals(UUID.fromString("5aa53572-b31c-4d27-814b-11709ab00259"), tickets[0].ticketDTO._id)
+    }
+
+    @Test
+    fun `user should be able to search ticket by tag`() {
+        //Given
+        val tag = "Wyoming"
+        //When
+        val tickets = searchDataStores.searchTicketByTag(tag)
+        //Then
     }
 
     private fun createUserDataStore(): UserDataStore {

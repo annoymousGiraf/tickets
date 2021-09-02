@@ -3,8 +3,10 @@ package service
 import data.store.TicketDataStore
 import dto.TicketDTO
 import dto.TicketType
+import entity.TicketEntity
 import kotlinx.coroutines.*
 import java.lang.Error
+import java.time.ZonedDateTime
 import java.util.*
 
 class TicketService(private val ticketDataStore : TicketDataStore) {
@@ -37,12 +39,21 @@ class TicketService(private val ticketDataStore : TicketDataStore) {
         return@runBlocking jobs.awaitAll().first() ?: Error("no ticket could be found")
     }
 
+
     fun searchTicketBySubject(subject: String): Any = runBlocking {
         val chunkedList = getAllTickets()
             .chunked(saltValueForChunking)
         val jobs = chunkedList.map { async{it::find{ it.subject == subject }} }
 
         return@runBlocking jobs.awaitAll().first() ?: Error("no ticket could be found")
+    }
+
+    fun searchTicketByTime(time: ZonedDateTime): List<TicketDTO> = getAllTickets()
+        .filter { it.created_at.isEqual(time) }
+
+
+    fun searchTicketByTag(tag: String): List<TicketDTO> {
+       return ticketDataStore.findAllTicketWithTag(tag)
     }
 
 

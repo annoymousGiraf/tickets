@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import service.TicketService
+import java.time.ZonedDateTime
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -97,13 +98,41 @@ class TicketServiceTest {
 
     @Test
     fun `user should be able to search by subject`(){
+        //Given
         val givenSubject = "A Problem in Heard and McDonald Islands"
         val expectedTicketDTO = ticketsFromJson.find { it.subject == givenSubject }
         val ticketService : TicketService = TicketService(jsonTicketDataStore as TicketDataStore)
         //when
         val ticket = ticketService.searchTicketBySubject(givenSubject)
 
+        //Then
         assertEquals(expectedTicketDTO,ticket)
+    }
+
+    @Test
+    fun `user should be able to search tickets by date and time`() {
+
+        //Given
+        val givenDateTime = ZonedDateTime.parse("2016-02-11T04:46:29-11:00")
+        val expectedTicketDTO = ticketsFromJson.filter { it.created_at.isEqual(givenDateTime) }
+        val ticketService : TicketService = TicketService(jsonTicketDataStore as TicketDataStore)
+        //When
+        val tickets = ticketService.searchTicketByTime(givenDateTime)
+
+        //Then
+        assertIterableEquals(expectedTicketDTO,tickets)
+    }
+
+    @Test
+    fun `user should be able to search tickets by tag`() {
+        //Given
+        val tag = "Wyoming"
+        val expectedTicketDTO = ticketsFromJson.filter { it.tags.contains("Wyoming") }
+        val ticketService : TicketService = TicketService(jsonTicketDataStore as TicketDataStore)
+        //When
+        val tickets = ticketService.searchTicketByTag(tag)
+        //Then
+        assertIterableEquals(expectedTicketDTO,tickets)
     }
 
     private fun getOnlyAssignedTickets(givenAssignedTickets: List<TicketDTO>) =
