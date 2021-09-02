@@ -16,6 +16,7 @@ data class TicketEntity(val ticketDTO: TicketDTO, val userName : String) {
             assignee_id     ${ticketDTO.assignee_id}
             tags            ${ticketDTO.tags}
             assignee_name   $userName
+            
         """.trimIndent()
     }
 }

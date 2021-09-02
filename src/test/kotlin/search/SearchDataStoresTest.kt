@@ -109,6 +109,7 @@ class SearchDataStoresTest {
         //When
         val tickets = searchDataStores.searchTicketByTag(tag)
         //Then
+        assertEquals(13, tickets.size)
     }
 
     private fun createUserDataStore(): UserDataStore {

@@ -13,6 +13,7 @@ data class User(val user: UserDTO, val ticketTopics: TicketTopics) {
             created_at      ${user.created_at}
             verified        ${user.verified}
             tickets         $ticketTopics
+            
         """.trimIndent()
     }
 }

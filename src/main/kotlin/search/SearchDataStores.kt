@@ -66,9 +66,11 @@ class SearchDataStores(private val userService: UserService, private val ticketS
         return tickets.map { TicketEntity(it,getUserNameById(it.assignee_id)) }
     }
 
-    fun searchTicketByTag(tag: String): List<TicketEntity> {
-        TODO("Not yet implemented")
-    }
+    fun searchTicketByTag(tag: String): List<TicketEntity> =
+         ticketService
+            .searchTicketByTag(tag)
+            .map { TicketEntity(it,getUserNameById(it.assignee_id)) }
+
 
     private fun getUserById(givenUserId: Int): User {
         val user = userService.findUserById(givenUserId)
