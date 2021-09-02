@@ -1,11 +1,13 @@
 package search
 
+import dto.TicketDTO
 import dto.TicketType
+import entity.EmptyTicket
 import entity.TicketEntity
 import entity.User
 import service.TicketService
 import service.UserService
-
+import java.util.*
 
 
 class SearchDataStores(private val userService: UserService, private val ticketService: TicketService) {
@@ -33,6 +35,20 @@ class SearchDataStores(private val userService: UserService, private val ticketS
             .filter { it.ticketDTO.assignee_id == userId }
             .toList()
 
+    fun searchTicketByType(ticketType: TicketType): List<TicketEntity> {
+        return ticketService.searchTicketByType(ticketType)
+            .map { TicketEntity(it,mapUserIdToUserName[it.assignee_id] ?: "") }
+
+    }
+
+    fun searchTicketByUUID(uuid: UUID) : TicketEntity {
+        val ticket = ticketService.searchTicketByUuid(uuid)
+        if (ticket is TicketDTO) {
+            return TicketEntity(ticket,mapUserIdToUserName[ticket.assignee_id] ?: "")
+        }
+        return EmptyTicket()
+
+    }
 
     private fun getUserById(givenUserId: Int): User {
         val user = userService.findUserById(givenUserId)
@@ -48,12 +64,7 @@ class SearchDataStores(private val userService: UserService, private val ticketS
             .toSet()
     }
 
-    fun searchTicketByType(ticketType: TicketType): List<TicketEntity> {
-        return ticketService.getAllTickets()
-            .filter { it.type != null && it.type == ticketType }
-            .map { TicketEntity(it,mapUserIdToUserName[it.assignee_id] ?: "") }
 
-    }
 
 
 }

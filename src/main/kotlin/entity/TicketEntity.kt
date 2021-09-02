@@ -1,14 +1,10 @@
 package entity
 
 import dto.TicketDTO
-import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.ZonedDateTime
+import java.util.*
 
-import java.time.format.DateTimeFormatter
-
-
-class TicketEntity(val ticketDTO: TicketDTO, val userName : String) {
+data class TicketEntity(val ticketDTO: TicketDTO, val userName : String) {
 
 
     override fun toString(): String {
@@ -23,3 +19,8 @@ class TicketEntity(val ticketDTO: TicketDTO, val userName : String) {
         """.trimIndent()
     }
 }
+
+ fun EmptyTicket() = TicketEntity(TicketDTO(UUID.fromString(""),
+    ZonedDateTime.now(),
+    null,"",null, listOf()),
+    "")

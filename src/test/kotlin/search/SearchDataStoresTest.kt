@@ -15,6 +15,7 @@ import org.junit.jupiter.api.TestInstance
 import search.SearchDataStores
 import service.TicketService
 import service.UserService
+import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SearchDataStoresTest {
@@ -65,6 +66,17 @@ class SearchDataStoresTest {
         val tickets = searchDataStores.searchTicketByType(givenType)
         //Then
         assertEquals(58,tickets.size)
+    }
+
+    @Test
+    fun `user should be able to search Ticket by UUID`(){
+        //Given
+        val ticketUUID = UUID.fromString("436bf9b0-1147-4c0a-8439-6f79833bff5b")
+
+        //When
+        val ticket = searchDataStores.searchTicketByUUID(ticketUUID)
+        //Then
+        assertEquals("A Catastrophe in Korea (North)" , ticket.ticketDTO.subject)
     }
 
     private fun createUserDataStore(): UserDataStore {
