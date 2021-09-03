@@ -2,17 +2,19 @@ package search
 
 import dto.TicketDTO
 import dto.TicketType
+import dto.UserDTO
 import entity.EmptyTicket
 import entity.TicketEntity
 import entity.User
 import service.TicketService
 import service.UserService
+import java.lang.Error
 import java.time.ZonedDateTime
 import java.util.*
 
 
 class SearchDataStores(private val userService: UserService, private val ticketService: TicketService) {
-    private val usersWithTicketTopics : Set<User>
+    private val usersWithTicketTopics : Map<Int,List<String>>
     private val ticketWithUserName : Set<TicketEntity>
     private val mapUserIdToUserName : Map<Int,String>
 
@@ -28,9 +30,6 @@ class SearchDataStores(private val userService: UserService, private val ticketS
             .map { TicketEntity(it,getUserNameById(it.assignee_id)) }
             .toSet()
     }
-
-    fun searchUserById(givenUserId: Int) : User = usersWithTicketTopics
-        .first { it.user._id == givenUserId }
 
 
     fun searchTicketByAssigneeId(userId: Int): List<TicketEntity> = ticketWithUserName
@@ -71,26 +70,41 @@ class SearchDataStores(private val userService: UserService, private val ticketS
             .searchTicketByTag(tag)
             .map { TicketEntity(it,getUserNameById(it.assignee_id)) }
 
+    fun searchUserById(userId: Int) : User = transformToUserEntitiy(userService.findUserById(userId))
 
-    private fun getUserById(givenUserId: Int): User {
-        val user = userService.findUserById(givenUserId)
-        val ticketsTopics = ticketService.searchByAssignee(givenUserId).map { it.subject }
-        return User(user,ticketsTopics)
-    }
+    fun searchUserByName(name: String): List<User> = userService
+        .findUserByName(name)
+        .map (::transformToUserEntitiy)
+
+    fun searchUsersByCreatedDate(createdTime: ZonedDateTime): List<User> = userService
+        .findAllUserByCreatedDate(createdTime)
+        .map (::transformToUserEntitiy)
+
+    fun searchVerifiedUsers(): List<User> = userService
+        .findVerifiedUsers()
+        .map (::transformToUserEntitiy)
+
+    fun searchUnverifiedUsers(): List<User> = userService
+        .findUnVerfiedUsers()
+        .map (::transformToUserEntitiy)
+
+    private fun transformToUserEntitiy(it: UserDTO) = User(it, usersWithTicketTopics[it._id] ?: listOf())
 
 
-    private fun prepareCollectionOfUsersAndTickets() : Set<User> {
+    private fun prepareCollectionOfUsersAndTickets() : Map<Int,List<String>> {
        return userService
             .findAllUsers()
             .asSequence()
-            .map { this.getUserById(it._id) }
-            .toSet()
+            .map { it._id }
+            .map {
+                it to ticketService.searchByAssignee(it)
+                    .map { ticket -> ticket.subject }
+            }
+            .toMap()
     }
-
 
 
     private fun getUserNameById(assignee_id : Int?) : String = if (assignee_id != null ) mapUserIdToUserName[assignee_id] ?: ""
             else ""
-
 
 }

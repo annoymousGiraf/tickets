@@ -120,6 +120,7 @@ class TicketServiceTest {
         val tickets = ticketService.searchTicketByTime(givenDateTime)
 
         //Then
+        assertEquals(1, tickets.size)
         assertIterableEquals(expectedTicketDTO,tickets)
     }
 
