@@ -4,7 +4,7 @@ import dto.UserDTO
 import java.time.ZonedDateTime
 
 interface UserDataStore : DataStore {
-    fun findUserById(id : Int) : UserDTO
+    fun findUserById(id : Int) : UserDTO?
     fun findAllUsers() : Collection<UserDTO>
     fun findUserByName(name: String): Collection<UserDTO>
     fun findVerifiedUsers(): Collection<UserDTO>

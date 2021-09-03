@@ -6,8 +6,8 @@ import java.time.ZonedDateTime
 
 class UserService(private val userDataStore: UserDataStore) {
 
-    fun findUserById(id : Int) :  UserDTO {
-        return userDataStore.findUserById(id)
+    fun findUserById(id : Int) :  UserDTO? {
+        return userDataStore.findUserById(id) ?: null
     }
 
     fun findAllUsers(): List<UserDTO> {

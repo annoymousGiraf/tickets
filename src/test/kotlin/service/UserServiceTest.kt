@@ -36,7 +36,7 @@ class UserServiceTest {
         val givenAssigneeId = 24
         val expectedName = "Harris Côpeland"
         //When
-        val user : UserDTO = userService.findUserById(givenAssigneeId)
+        val user : UserDTO = userService.findUserById(givenAssigneeId) ?: UserDTO(1,"", ZonedDateTime.now(),false)
 
         //Then
         assertEquals(expectedName ,user.name)

@@ -8,8 +8,8 @@ class JsonUserDataStore(private val jsonDataStore: List<UserDTO>) : UserDataStor
     private val verifiedUsers = jsonDataStore.filter { it.verified  }
     val unVerifiedUsers = jsonDataStore - verifiedUsers
 
-    override fun findUserById(id: Int) : UserDTO {
-        return jsonDataStore.first { it._id == id }
+    override fun findUserById(id: Int) : UserDTO? {
+        return jsonDataStore.find { it._id == id }
     }
 
     override fun findAllUsers(): Collection<UserDTO> {

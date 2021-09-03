@@ -3,12 +3,10 @@ package search
 import dto.TicketDTO
 import dto.TicketType
 import dto.UserDTO
-import entity.EmptyTicket
 import entity.TicketEntity
 import entity.User
 import service.TicketService
 import service.UserService
-import java.lang.Error
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -36,59 +34,62 @@ class SearchDataStores(private val userService: UserService, private val ticketS
             .filter { it.ticketDTO.assignee_id == userId }
             .toList()
 
-    fun searchTicketByType(ticketType: TicketType): List<TicketEntity> {
-        return ticketService.searchTicketByType(ticketType)
-            .map { TicketEntity(it,getUserNameById(it.assignee_id)) }
+    fun searchTicketByType(ticketType: TicketType): List<TicketEntity> = ticketService
+        .searchTicketByType(ticketType)
+        .map { TicketEntity(it, getUserNameById(it.assignee_id)) }
 
-    }
 
-    fun searchTicketByUUID(uuid: UUID) : TicketEntity {
+
+
+    fun searchTicketByUUID(uuid: UUID) : TicketEntity? {
         val ticket = ticketService.searchTicketByUuid(uuid)
         if (ticket is TicketDTO) {
             return TicketEntity(ticket,getUserNameById(ticket.assignee_id))
         }
-        return EmptyTicket()
+        return null
     }
 
 
 
-    fun searchTicketBySubject(ticketSubject: String): TicketEntity {
+    fun searchTicketBySubject(ticketSubject: String): TicketEntity? {
         val ticket = ticketService.searchTicketBySubject(ticketSubject)
         if (ticket is TicketDTO) {
             return TicketEntity(ticket, getUserNameById(ticket.assignee_id))
         }
-        return EmptyTicket()
+        return null
     }
 
-    fun searchTicketByDate(ticketDate: ZonedDateTime): List<TicketEntity> {
-        val tickets = ticketService.searchTicketByTime(ticketDate)
-        return tickets.map { TicketEntity(it,getUserNameById(it.assignee_id)) }
-    }
+    fun searchTicketByDate(ticketDate: ZonedDateTime): List<TicketEntity> = ticketService
+        .searchTicketByTime(ticketDate)
+        .map { TicketEntity(it,getUserNameById(it.assignee_id)) }
 
-    fun searchTicketByTag(tag: String): List<TicketEntity> =
-         ticketService
+
+    fun searchTicketByTag(tag: String): List<TicketEntity> = ticketService
             .searchTicketByTag(tag)
             .map { TicketEntity(it,getUserNameById(it.assignee_id)) }
 
-    fun searchUserById(userId: Int) : User = transformToUserEntitiy(userService.findUserById(userId))
+    fun searchUserById(userId: Int) : User? {
+        val user = userService.findUserById(userId)
+        return if (user != null) transformToUserEntity(user) else null
+    }
 
     fun searchUserByName(name: String): List<User> = userService
         .findUserByName(name)
-        .map (::transformToUserEntitiy)
+        .map (::transformToUserEntity)
 
     fun searchUsersByCreatedDate(createdTime: ZonedDateTime): List<User> = userService
         .findAllUserByCreatedDate(createdTime)
-        .map (::transformToUserEntitiy)
+        .map (::transformToUserEntity)
 
     fun searchVerifiedUsers(): List<User> = userService
         .findVerifiedUsers()
-        .map (::transformToUserEntitiy)
+        .map (::transformToUserEntity)
 
     fun searchUnverifiedUsers(): List<User> = userService
         .findUnVerfiedUsers()
-        .map (::transformToUserEntitiy)
+        .map (::transformToUserEntity)
 
-    private fun transformToUserEntitiy(it: UserDTO) = User(it, usersWithTicketTopics[it._id] ?: listOf())
+    private fun transformToUserEntity(it: UserDTO) = User(it, usersWithTicketTopics[it._id] ?: listOf())
 
 
     private fun prepareCollectionOfUsersAndTickets() : Map<Int,List<String>> {

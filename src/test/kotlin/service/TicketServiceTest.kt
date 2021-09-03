@@ -1,5 +1,6 @@
 package dto.test.data.service
 
+import arrow.core.valid
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -77,7 +78,6 @@ class TicketServiceTest {
         //When
         val ticket = ticketService.searchTicketByUuid(ticketUUID)
         //Then
-        print(ticket)
         assertEquals(expectedTicketDTO,ticket)
     }
 
@@ -92,7 +92,6 @@ class TicketServiceTest {
         val ticket = ticketService.searchTicketByType(ticketType)
 
         //Then
-        print(ticket)
         assertEquals(expectedTicketDTO,ticket)
     }
 
