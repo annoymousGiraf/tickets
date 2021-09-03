@@ -1,19 +1,15 @@
 package dto.test.data.service
 
-import arrow.core.valid
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import data.factory.DataStoreFactory
-import data.factory.DataStoreFactory.*
 import data.factory.DataStoreFactory.DataEntity.*
 import data.store.DataStore
 import data.store.TicketDataStore
 import dto.TicketDTO
-import dto.TicketType
 import dto.TicketType.*
 import dto.test.data.allTickets
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

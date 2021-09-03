@@ -89,6 +89,10 @@ class SearchDataStores(private val userService: UserService, private val ticketS
         .findUnVerfiedUsers()
         .map (::transformToUserEntity)
 
+    fun searchUserByVerification(isVerfied : Boolean) : List<User> {
+       return if (isVerfied) searchVerifiedUsers() else searchUnverifiedUsers()
+    }
+
     private fun transformToUserEntity(it: UserDTO) = User(it, usersWithTicketTopics[it._id] ?: listOf())
 
 
