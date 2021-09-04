@@ -3,7 +3,6 @@ package dto.test.data.dto
 import dto.userDataTypes
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -18,5 +17,16 @@ class UserInputTest {
         val expectedType : Regex = userDataTypes[givenType]!!
         //Then
         assertTrue("Francis Rodrigüez".matches(expectedType))
+    }
+
+    @Test
+    fun `should be able to detect input type of boolean`() {
+        //Given
+        val givenType ="verified"
+        //When
+        val expectedType : Regex = userDataTypes[givenType]!!
+        val matching = "true".matches(expectedType)
+        //Then
+        assertEquals(true , matching)
     }
 }
