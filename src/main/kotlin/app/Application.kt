@@ -13,12 +13,12 @@ import search.SearchDataStores
 import service.TicketService
 import service.UserService
 import java.lang.Error
-import java.net.URL
+import java.net.URI
 import java.time.ZonedDateTime
 import java.util.*
 import kotlin.system.exitProcess
 
-class Application( tickets : URL,  user : URL) {
+class Application(tickets : URI, user : URI) {
 
     private val searchDataStore : SearchDataStores
     private val logger = KotlinLogging.logger {}
@@ -28,7 +28,7 @@ class Application( tickets : URL,  user : URL) {
 
         if (ticketsDataStore is Error || userDataStore is Error) {
             println("Could not support data stores")
-            logger.error { "Data Store could not be supported."}
+            logger.error { "Data Store could not be supported. with  Url tickets = $tickets and users = $user"}
             exitProcess(1)
         }
         logger.info { "data stores connected" }

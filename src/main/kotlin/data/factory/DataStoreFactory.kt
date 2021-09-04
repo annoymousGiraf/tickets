@@ -8,8 +8,7 @@ import extnetion.dataStoreType
 import mu.KotlinLogging
 import reader.TicketJsonFileReader
 import reader.UserJsonFileReader
-import java.net.URL
-
+import java.net.URI
 
 
 class DataStoreFactory {
@@ -28,23 +27,23 @@ class DataStoreFactory {
 
     companion object {
         private val logger = KotlinLogging.logger {}
-        fun  createDataStore(url : URL, entityType : DataEntity) : Any = when(url.dataStoreType()) {
+        fun  createDataStore(uri: URI, entityType: DataEntity) : Any = when(uri.dataStoreType()) {
             JSON_DATA_STORE.storeType -> {
                 when(entityType) {
                     TICKETS -> {
                         logger.info { "Creating data store for Tickets with local json file" }
-                        val jsonFileReader  = TicketJsonFileReader(url)
+                        val jsonFileReader  = TicketJsonFileReader(uri)
                         JsonTicketDataStore(jsonFileReader.ticketsDTO)
                     }
                     USERS -> {
                         logger.info { "Creating data store for Userr with local json file" }
-                        val jsonFileReader  = UserJsonFileReader(url)
+                        val jsonFileReader  = UserJsonFileReader(uri)
                         JsonUserDataStore(jsonFileReader.usersDTO)
                     }
                 }
 
             }
-            else -> Error("unsupported data store")
+            else -> Error("unsupported data store of $uri")
         }
     }
 

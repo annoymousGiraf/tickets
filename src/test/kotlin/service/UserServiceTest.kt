@@ -25,7 +25,7 @@ class UserServiceTest {
         .readValue(allUsersJson)
 
     init {
-        val urlToJson = {}.javaClass.classLoader.getResource("users.json")
+        val urlToJson = {}.javaClass.classLoader.getResource("users.json").toURI()
         jsonUserDataStore = DataStoreFactory.createDataStore(urlToJson, USERS) as DataStore
         userService = UserService(jsonUserDataStore as UserDataStore)
     }

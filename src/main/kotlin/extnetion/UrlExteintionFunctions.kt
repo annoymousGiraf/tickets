@@ -1,10 +1,16 @@
 package extnetion
 
-import data.factory.DataStoreFactory
+import data.factory.DataStoreFactory.DataStoreType.*
 import java.io.File
-import java.net.URL
+import java.lang.Exception
+import java.net.URI
 
-fun URL.dataStoreType() : String {
-    val file = File(this.file)
-    return if (file.isFile) file.extension else DataStoreFactory.DataStoreType.REMOTE_DATA_STORE.storeType
+fun URI.dataStoreType() : String {
+    return try {
+        val file = File(this)
+        file.extension
+    }
+    catch (exception  : Exception) {
+        REMOTE_DATA_STORE.storeType
+    }
 }

@@ -12,14 +12,14 @@ class UrlExtentionFunctionTest {
 
     @Test
     fun `extension should return json for URL to file`(){
-        val givenURL = {}.javaClass.classLoader.getResource("tickets.json")
+        val givenURL = {}.javaClass.classLoader.getResource("tickets.json").toURI()
 
         assertEquals(JSON_DATA_STORE.storeType,givenURL.dataStoreType())
     }
 
     @Test
     fun `extension should return remote for URL is not a file`(){
-        val givenURL = URI("http://localhost:8888/").toURL()
+        val givenURL = URI("http://localhost:8888/")
 
         assertEquals(REMOTE_DATA_STORE.storeType,givenURL.dataStoreType())
     }

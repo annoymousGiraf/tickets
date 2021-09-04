@@ -6,30 +6,30 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import dto.TicketDTO
 import dto.UserDTO
 import mu.KotlinLogging
-import java.net.URL
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
 
-open class JsonFileReader(url : URL) : FileReader {
+open class JsonFileReader(uri: URI) : FileReader {
     val objectMapper = jacksonObjectMapper()
         .registerModule(JavaTimeModule())
     private val logger = KotlinLogging.logger {}
     val jsonString : String
     init {
-        jsonString = readFile(url)
+        jsonString = readFile(uri)
     }
 
-    override fun readFile(url: URL): String {
-        logger.info { "reading file from $url" }
-        return Files.readString(Path.of(url.toURI()))
+    override fun readFile(uri: URI): String {
+        logger.info { "reading file from $uri" }
+        return Files.readString(Path.of(uri))
     }
 }
 
-class TicketJsonFileReader(url: URL) : JsonFileReader(url) {
+class TicketJsonFileReader(uri: URI) : JsonFileReader(uri) {
     val ticketsDTO : List<TicketDTO> =  objectMapper.readValue(jsonString)
 }
 
 
-class UserJsonFileReader(url: URL) : JsonFileReader(url) {
+class UserJsonFileReader(uri: URI) : JsonFileReader(uri) {
     val usersDTO : List<UserDTO> = objectMapper.readValue(jsonString)
 }

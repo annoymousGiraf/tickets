@@ -202,14 +202,14 @@ class SearchDataStoresTest {
 
     private fun createUserDataStore(): UserDataStore {
         val usersUrlToJson = {}.javaClass.classLoader
-            .getResource("users.json")
+            .getResource("users.json").toURI()
         return DataStoreFactory
             .createDataStore(usersUrlToJson, USERS) as UserDataStore
     }
 
     private fun createTicketDataStore(): TicketDataStore {
         val ticketUrlToJson = {}.javaClass.classLoader
-            .getResource("tickets.json")
+            .getResource("tickets.json").toURI()
         return DataStoreFactory
             .createDataStore(ticketUrlToJson, TICKETS) as TicketDataStore
     }

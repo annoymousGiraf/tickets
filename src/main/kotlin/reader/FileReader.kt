@@ -1,9 +1,9 @@
 package reader
 
-import java.net.URL
+import java.net.URI
 
 interface FileReader {
 
-    fun readFile(url: URL) : String
+    fun readFile(uri: URI) : String
 
 }

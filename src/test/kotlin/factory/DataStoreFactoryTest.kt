@@ -14,7 +14,7 @@ class DataStoreFactoryTest {
     @Test
     fun `should create data store instance from json input file`(){
         val datastore : JsonTicketDataStore =
-            DataStoreFactory.createDataStore({}.javaClass.classLoader.getResource("tickets.json"), TICKETS) as JsonTicketDataStore
+            DataStoreFactory.createDataStore({}.javaClass.classLoader.getResource("tickets.json").toURI(), TICKETS) as JsonTicketDataStore
 
         assertSame(JsonTicketDataStore::class.java,datastore.javaClass)
     }
