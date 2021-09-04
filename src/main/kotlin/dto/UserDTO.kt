@@ -2,7 +2,7 @@ package dto
 
 
 import java.time.ZonedDateTime
-import java.util.regex.Pattern
+
 
 data class UserDTO(val _id : Int, val name: String, val created_at : ZonedDateTime, val verified : Boolean)
 

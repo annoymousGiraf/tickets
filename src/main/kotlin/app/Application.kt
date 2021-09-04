@@ -23,15 +23,6 @@ class Application( tickets : URL,  user : URL) {
     private val ticketSearchCommand : Map<String, KFunction<*>>
 
 
-    private val promptScreen = """
-        Welcome to Ticket And Users Search Engine
-        Type `quit` to exit at any time, select one of the options bellow
-        
-                    * press 1 to search
-                    * press 2 to lookup fields
-                    * type `quit` to exit
-    """.trimIndent()
-
     init {
         val ticketsDataStore = DataStoreFactory.createDataStore(tickets,TICKETS)
         val userDataStore = DataStoreFactory.createDataStore(user, USERS)
@@ -67,6 +58,7 @@ class Application( tickets : URL,  user : URL) {
                 "2" -> showOptions()
                 else -> println("invalid Option choose 1 or 2, or type quit to exit")
             }
+            println(promptScreen)
             option = readLine()
         }
 
@@ -77,7 +69,7 @@ class Application( tickets : URL,  user : URL) {
         when (val option = readLine()) {
             "1" -> searchTickets()
             "2" -> searchUsers()
-            "back" -> println(promptScreen).also {  return }
+            "back" -> return
             else -> {
                 println("you typed $option, which is invalid")
                 runSearch()
@@ -94,17 +86,15 @@ class Application( tickets : URL,  user : URL) {
 
     private fun searchUsers() {
         val (term, value) = getSearchInput()
-        if ((term.isNullOrEmpty() || value.isNullOrEmpty()) ) {
-            println("Search input is not valid")
+
+        val pattern = userDataTypes[term]
+
+        if (pattern == null) {
+            println("the term: $term isnt supported or could not be found")
             return
         }
 
-        if (userDataTypes[term] == null) {
-            println("the term: $term isnt supported")
-            return
-        }
-
-        if (!value.matches(userDataTypes[term]!!)) {
+        if (!value.matches(pattern)) {
             println("$value doesnt not match the type of $term")
             return
         }
@@ -116,33 +106,29 @@ class Application( tickets : URL,  user : URL) {
             return
         }
         println(users)
+        waitBeforeGoingBack()
     }
 
     private fun isInputValid(term: String?, value: String?) = term.isNullOrEmpty() || value.isNullOrEmpty()
 
-    private fun getSearchInput(): Pair<String?, String?> {
+    private fun getSearchInput(): Pair<String, String> {
         println("Enter search term")
         val term = readLine()
 
         println("Enter search value")
         val value = readLine()
-        return Pair(term, value)
+
+        if ((isInputValid(term,value)) ) {
+            println("Search input is not valid")
+            return Pair("","")
+        }
+
+        return Pair(term!!, value!!)
     }
 
     private fun showOptions() {
-
-        println("Options for User")
-        println("---------------")
-        println(userDataTypes.keys.joinToString("\n"))
-        println("---------------")
-        println("Options for Tickets")
-        println("---------------")
-        println(ticketDataTypes.keys.joinToString("\n"))
-
-        println("---------------")
-        println("press `enter` to go back")
-        readLine()
-        println(promptScreen)
+        println(termsForSearch)
+        waitBeforeGoingBack()
     }
 
 
@@ -157,6 +143,10 @@ class Application( tickets : URL,  user : URL) {
         }
     }
 
+    private fun waitBeforeGoingBack() {
+        println("press `enter` to go back")
+        readLine()
+    }
 
 
 
