@@ -20,8 +20,3 @@ data class TicketEntity(val ticketDTO: TicketDTO, val userName : String) {
         """.trimIndent()
     }
 }
-
- fun EmptyTicket() = TicketEntity(TicketDTO(UUID.fromString(""),
-    ZonedDateTime.now(),
-    null,"",null, listOf()),
-    "")

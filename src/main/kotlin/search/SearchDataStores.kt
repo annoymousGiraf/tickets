@@ -5,6 +5,7 @@ import dto.TicketType
 import dto.UserDTO
 import entity.TicketEntity
 import entity.User
+import mu.KotlinLogging
 import service.TicketService
 import service.UserService
 import java.time.ZonedDateTime
@@ -15,8 +16,10 @@ class SearchDataStores(private val userService: UserService, private val ticketS
     private val usersWithTicketTopics : Map<Int,List<String>>
     private val ticketWithUserName : Set<TicketEntity>
     private val mapUserIdToUserName : Map<Int,String>
+    private val logger = KotlinLogging.logger {}
 
     init {
+        logger.info { "starting pre filed data for better search" }
         usersWithTicketTopics = prepareCollectionOfUsersAndTickets()
         mapUserIdToUserName = userService
                 .findAllUsers()
@@ -46,16 +49,16 @@ class SearchDataStores(private val userService: UserService, private val ticketS
         if (ticket is TicketDTO) {
             return TicketEntity(ticket,getUserNameById(ticket.assignee_id))
         }
+        logger.debug { "could not find any ticket with uuid = $uuid" }
         return null
     }
-
-
 
     fun searchTicketBySubject(ticketSubject: String): TicketEntity? {
         val ticket = ticketService.searchTicketBySubject(ticketSubject)
         if (ticket is TicketDTO) {
             return TicketEntity(ticket, getUserNameById(ticket.assignee_id))
         }
+        logger.debug { "could not find any ticket with subject = $ticketSubject" }
         return null
     }
 

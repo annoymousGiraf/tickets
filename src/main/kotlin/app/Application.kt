@@ -8,6 +8,7 @@ import data.store.UserDataStore
 import dto.TicketType
 import dto.ticketDataTypes
 import dto.userDataTypes
+import mu.KotlinLogging
 import search.SearchDataStores
 import service.TicketService
 import service.UserService
@@ -20,16 +21,17 @@ import kotlin.system.exitProcess
 class Application( tickets : URL,  user : URL) {
 
     private val searchDataStore : SearchDataStores
-
+    private val logger = KotlinLogging.logger {}
     init {
         val ticketsDataStore = DataStoreFactory.createDataStore(tickets,TICKETS)
         val userDataStore = DataStoreFactory.createDataStore(user, USERS)
 
         if (ticketsDataStore is Error || userDataStore is Error) {
             println("Could not support data stores")
+            logger.error { "Data Store could not be supported."}
             exitProcess(1)
         }
-
+        logger.info { "data stores connected" }
         searchDataStore = SearchDataStores(UserService(userDataStore as UserDataStore),
             TicketService(ticketsDataStore as TicketDataStore))
 
@@ -37,6 +39,7 @@ class Application( tickets : URL,  user : URL) {
     }
 
     private fun runApp() {
+        logger.info { "Starting CLI Search Engine" }
         println(promptScreen)
         var option = readLine()
         while (option != "quit") {
@@ -70,7 +73,7 @@ class Application( tickets : URL,  user : URL) {
 
         val pattern = ticketDataTypes[term]
 
-        if (isValueAndTermSupported(pattern, term, value)) return
+        if (!isValueAndTermSupported(pattern, term, value)) return
 
 
         val tickets = ticketSearchCommand(term,value)
@@ -89,7 +92,7 @@ class Application( tickets : URL,  user : URL) {
 
         val pattern = userDataTypes[term]
 
-        if (isValueAndTermSupported(pattern, term, value)) return
+        if (!isValueAndTermSupported(pattern, term, value)) return
 
         val users = userSearchCommand(term,value)
         println("Searching users for $term with a value of $value")
@@ -107,15 +110,17 @@ class Application( tickets : URL,  user : URL) {
         value: String
     ): Boolean {
         if (pattern == null) {
+            logger.error { "could not locate the selected term $term" }
             println("the term: $term isnt supported or could not be found")
-            return true
+            return false
         }
 
         if (!value.matches(pattern)) {
             println("$value doesnt not match the type of $term")
-            return true
+            logger.error { "$value is not a match forr $term"  }
+            return false
         }
-        return false
+        return true
     }
 
     private fun isInputValid(term: String?, value: String?) = term.isNullOrEmpty() || value.isNullOrEmpty()
