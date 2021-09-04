@@ -1,5 +1,7 @@
 package dto.test.data.dto
 
+import app.dto.ticketTypeRegex
+import dto.ticketDataTypes
 import dto.userDataTypes
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -29,4 +31,16 @@ class UserInputTest {
         //Then
         assertEquals(true , matching)
     }
+
+    @Test
+    fun `should be able to detect input type of TicketType`() {
+        //Given
+        val givenType ="type"
+        //When
+        val expectedType : Regex = ticketDataTypes[givenType]!!
+        val matching = "incident".matches(expectedType)
+        //Then
+        assertEquals(true , matching)
+    }
+
 }

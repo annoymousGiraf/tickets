@@ -5,6 +5,7 @@ import data.factory.DataStoreFactory
 import data.factory.DataStoreFactory.DataEntity.*
 import data.store.TicketDataStore
 import data.store.UserDataStore
+import dto.TicketType
 import dto.ticketDataTypes
 import dto.userDataTypes
 import search.SearchDataStores
@@ -13,15 +14,12 @@ import service.UserService
 import java.lang.Error
 import java.net.URL
 import java.time.ZonedDateTime
-import kotlin.reflect.KFunction
+import java.util.*
 import kotlin.system.exitProcess
 
 class Application( tickets : URL,  user : URL) {
 
-
     private val searchDataStore : SearchDataStores
-    private val ticketSearchCommand : Map<String, KFunction<*>>
-
 
     init {
         val ticketsDataStore = DataStoreFactory.createDataStore(tickets,TICKETS)
@@ -35,17 +33,6 @@ class Application( tickets : URL,  user : URL) {
         searchDataStore = SearchDataStores(UserService(userDataStore as UserDataStore),
             TicketService(ticketsDataStore as TicketDataStore))
 
-
-
-       ticketSearchCommand = mapOf(
-           "_id" to searchDataStore::searchTicketByUUID,
-           "created_at" to searchDataStore::searchUsersByCreatedDate,
-           "type" to searchDataStore::searchTicketByType,
-           "subject" to searchDataStore::searchTicketBySubject,
-           "assignee_id" to searchDataStore::searchTicketByAssigneeId,
-           "tags" to searchDataStore::searchTicketByTag
-
-       )
         runApp()
     }
 
@@ -75,29 +62,34 @@ class Application( tickets : URL,  user : URL) {
                 runSearch()
             }
         }
-
     }
 
     private fun searchTickets() {
         println("Search Tickets")
+        val (term, value) = getSearchInput()
+
+        val pattern = ticketDataTypes[term]
+
+        if (isValueAndTermSupported(pattern, term, value)) return
+
+
+        val tickets = ticketSearchCommand(term,value)
+        println("Searching tickets for $term with a value of $value")
+        if (tickets == null || tickets.isNullOrEmpty()){
+            println("No results were found")
+            return
+        }
+        println(tickets)
+        waitBeforeGoingBack()
     }
 
-
-
     private fun searchUsers() {
+        println("Search Users")
         val (term, value) = getSearchInput()
 
         val pattern = userDataTypes[term]
 
-        if (pattern == null) {
-            println("the term: $term isnt supported or could not be found")
-            return
-        }
-
-        if (!value.matches(pattern)) {
-            println("$value doesnt not match the type of $term")
-            return
-        }
+        if (isValueAndTermSupported(pattern, term, value)) return
 
         val users = userSearchCommand(term,value)
         println("Searching users for $term with a value of $value")
@@ -107,6 +99,23 @@ class Application( tickets : URL,  user : URL) {
         }
         println(users)
         waitBeforeGoingBack()
+    }
+
+    private fun isValueAndTermSupported(
+        pattern: Regex?,
+        term: String,
+        value: String
+    ): Boolean {
+        if (pattern == null) {
+            println("the term: $term isnt supported or could not be found")
+            return true
+        }
+
+        if (!value.matches(pattern)) {
+            println("$value doesnt not match the type of $term")
+            return true
+        }
+        return false
     }
 
     private fun isInputValid(term: String?, value: String?) = term.isNullOrEmpty() || value.isNullOrEmpty()
@@ -143,12 +152,23 @@ class Application( tickets : URL,  user : URL) {
         }
     }
 
+    private fun ticketSearchCommand (term : String, value : String) : Any? = when(term) {
+        "_id" -> searchDataStore.searchTicketByUUID(UUID.fromString(value))
+        "created_at" -> searchDataStore.searchUsersByCreatedDate(ZonedDateTime.parse(value))
+        "type" -> searchDataStore.searchTicketByType(TicketType.valueOf(value.toUpperCase()))
+        "subject" -> searchDataStore.searchTicketBySubject(value)
+        "assignee_id" -> searchDataStore.searchTicketByAssigneeId(value.toInt())
+        "tags" -> searchDataStore.searchTicketByTag(value)
+        else -> {
+            println("Search Term doesnt exist")
+            null
+        }
+    }
+
     private fun waitBeforeGoingBack() {
         println("press `enter` to go back")
         readLine()
     }
-
-
 
 }
 

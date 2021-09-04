@@ -1,18 +1,21 @@
 package dto
 
 
+import app.dto.booleanRegex
+import app.dto.dateFormat
+import app.dto.intRegex
+import app.dto.stringRegex
 import java.time.ZonedDateTime
 
 
 data class UserDTO(val _id : Int, val name: String, val created_at : ZonedDateTime, val verified : Boolean)
 
-const val dateFormat = "^[1-9][0-9]+-[0-9]+-[0-9]+[A-Z][0-9]+:[0-9]+:[0-9]+[0-9]+-[0-9]+:[0-9]+"
 
 val userDataTypes = mapOf(
-    "_id" to "\\d+".toRegex(),
-    "name" to "^.+".toRegex(),
+    "_id" to intRegex.toRegex(),
+    "name" to stringRegex.toRegex(),
     "created_at" to dateFormat.toRegex(),
-    "verified" to "true|false".toRegex()
+    "verified" to booleanRegex.toRegex()
 )
 
 

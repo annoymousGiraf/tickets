@@ -1,6 +1,6 @@
 package dto
 
-import entity.User
+import app.dto.*
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -8,13 +8,14 @@ data class TicketDTO (val _id : UUID, val created_at : ZonedDateTime, val type :
                         val subject : String, val assignee_id : Int? , val tags : List<String> )
 
 
+
 val ticketDataTypes = mapOf(
-    "_id" to Int,
-    "subject" to String,
-    "created_at" to ZonedDateTime::class.java,
-    "assignee_id" to Int,
-    "type" to TicketType::class.java,
-    "tags" to String
+    "_id" to uuidRegex.toRegex(),
+    "subject" to stringRegex.toRegex(),
+    "created_at" to dateFormat.toRegex(),
+    "assignee_id" to intRegex.toRegex(),
+    "type" to ticketTypeRegex.toRegex(),
+    "tags" to stringRegex.toRegex()
 )
 
 
