@@ -9,8 +9,8 @@ fun main(args: Array<String>) {
         Application(URI(args[0]), URI(args[1]))
         exitProcess(0)
     } else {
-        val tickets = File("./tickets.json").toURI()
-        val users = File("./users.json").toURI()
+        val tickets = File("tickets.json").toURI()
+        val users = File("users.json").toURI()
         Application(tickets, users)
         exitProcess(0)
     }

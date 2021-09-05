@@ -1,0 +1,17 @@
+version: "3"
+services:
+  build:
+    image: openjdk:11
+    working_dir: /root/app
+    volumes:
+      - ./:/root/app
+      - ~/.gradle/:/root/.gradle
+    command: >
+      bash -c
+        "./gradlew clean
+        ./gradlew jar"
+
+  release:
+    build:
+      context: .
+    image: tickets

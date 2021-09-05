@@ -26,24 +26,27 @@ test {
     useJUnitPlatform()
 }
 
+task copyLocalFiles(type : Copy) {
+        copy {
+            from "${rootProject.projectDir}/tickets.json"
+            into 'build/libs'
+        }
+
+        copy {
+            from "${rootProject.projectDir}/users.json"
+            into 'build/libs'
+        }
+}
+
 jar {
     manifest {
         attributes 'Main-Class': 'app.MainKt'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    copy {
-        from "${rootProject.projectDir}/tickets.json"
-        into 'build/libs'
+    doLast {
+        copyLocalFiles
     }
-
-    copy {
-        from "${rootProject.projectDir}/users.json"
-        into 'build/libs'
-    }
-
-
 }
-
 
 
 compileKotlin {
