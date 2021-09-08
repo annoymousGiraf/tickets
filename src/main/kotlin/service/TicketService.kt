@@ -47,7 +47,7 @@ class TicketService(private val ticketDataStore : TicketDataStore) {
         logger.info { "chunking Tickets list to optimise search" }
         val chunkedList = getAllTickets()
             .chunked(saltValueForChunking)
-        val jobs = chunkedList.map { async{it::find{ it.subject == subject }} }
+        val jobs = chunkedList.map { async{it::find{ it.subject.equals(subject,ignoreCase = true) }} }
 
         return@runBlocking jobs.awaitAll().first()
     }
@@ -60,7 +60,5 @@ class TicketService(private val ticketDataStore : TicketDataStore) {
     fun searchTicketByTag(tag: String): List<TicketDTO> = ticketDataStore
         .findAllTicketWithTag(tag)
         .also { logger.debug { "searching ticket by tag = $tag" } }
-
-
 
 }
