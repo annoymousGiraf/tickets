@@ -122,7 +122,7 @@ class TicketServiceTest {
     @Test
     fun `user should be able to search tickets by tag`() {
         //Given
-        val tag = "Wyoming"
+        val tag = "wyoming"
         val expectedTicketDTO = ticketsFromJson.filter { it.tags.contains("Wyoming") }
         val ticketService : TicketService = TicketService(jsonTicketDataStore as TicketDataStore)
         //When

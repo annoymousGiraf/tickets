@@ -10,7 +10,7 @@ class JsonTicketDataStore(private val jsonDataStore: List<TicketDTO>) : TicketDa
     private val indexedTags : Map<String,Set<TicketDTO>> = jsonDataStore
         .asSequence()
         .flatMap { it.tags.distinct() }
-        .map { it to jsonDataStore.filter { ticket -> ticket.tags.contains(it) }.toSet() }
+        .map { it.toLowerCase() to jsonDataStore.filter { ticket -> ticket.tags.contains(it) }.toSet() }
         .toMap()
 
     override fun lookupByAssignee(id: Int): List<TicketDTO> {
@@ -26,8 +26,6 @@ class JsonTicketDataStore(private val jsonDataStore: List<TicketDTO>) : TicketDa
     }
 
     override fun findAllTicketWithTag(tag: String): List<TicketDTO> {
-        return indexedTags[tag]?.toList() ?: listOf()
+        return indexedTags[tag.toLowerCase()]?.toList() ?: listOf()
     }
-
-
 }

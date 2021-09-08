@@ -95,3 +95,4 @@ in order to not over engineering the task i avoided demonstrated possible featur
 1. only json files given are supported locally
 2. no remote storage
 3. basic user interaction
+4. In Tags and Subject we can ignore case e.g Ohio == ohio
